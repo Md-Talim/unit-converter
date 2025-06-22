@@ -12,6 +12,8 @@ type ConversionStrategy interface {
 
 func GetConverter(category string) UnitConverter {
 	switch category {
+	case "length":
+		return &LengthConverter
 	case "temperature":
 		return &TemperatureConverter{}
 	case "weight":
