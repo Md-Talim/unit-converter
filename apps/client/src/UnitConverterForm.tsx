@@ -46,13 +46,12 @@ const UnitConverterForm = ({ category }: UnitConverterFormProps) => {
   ) => {
     e.preventDefault();
     const params = new URLSearchParams({
+      category: category.toLowerCase(),
       value: value.toString(),
       from: selectedFromUnit.toLowerCase(),
       to: selectedToUnit.toLowerCase(),
     });
     const url = `http://localhost:4000/convert?${params.toString()}`;
-
-    console.log(url);
 
     const response = await fetch(url, { method: "POST" });
     if (!response.ok) {

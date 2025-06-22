@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/md-talim/unit-converter/server/pkg/converter"
 )
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -15,17 +17,13 @@ func corsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method)
-	w.Write([]byte("Building unit coverter project from roadmap.sh"))
-}
-
 func convert(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
+	unitCategory := r.URL.Query().Get("category")
 	valueStr := r.URL.Query().Get("value")
 	from := r.URL.Query().Get("from")
 	to := r.URL.Query().Get("to")
@@ -36,14 +34,15 @@ func convert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var result float64
-	if from == "grams" && to == "kilograms" {
-		result = value / 1000
-	} else if from == "kilograms" && to == "grams" {
-		result = value * 1000
-	} else {
-		http.Error(w, "Conversion not supported", http.StatusBadRequest)
+	unitConverter := converter.GetConverter(unitCategory)
+	if unitConverter == nil {
+		http.Error(w, "Category not supported", http.StatusBadRequest)
 		return
+	}
+
+	result, err := unitConverter.Convert(value, from, to)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -52,7 +51,6 @@ func convert(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
 	mux.HandleFunc("POST /convert", convert)
 
 	log.Print("Starting server on :4000")
