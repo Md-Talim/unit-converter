@@ -11,7 +11,5 @@ func (t *TemperatureConverter) Convert(value float64, from string, to string) (f
 		return 0, fmt.Errorf("conversion not supported")
 	}
 
-	ctx := ConverterContext{}
-	ctx.SetStrategy(strategy)
-	return ctx.Convert(value), nil
+	return strategy.Convert(value), nil
 }

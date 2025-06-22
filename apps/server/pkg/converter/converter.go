@@ -4,16 +4,8 @@ type UnitConverter interface {
 	Convert(value float64, from string, to string) (float64, error)
 }
 
-type ConverterContext struct {
-	strategy ConversionStrategy
-}
-
-func (c *ConverterContext) SetStrategy(s ConversionStrategy) {
-	c.strategy = s
-}
-
-func (c *ConverterContext) Convert(value float64) float64 {
-	return c.strategy.Convert(value)
+type ConversionStrategy interface {
+	Convert(value float64) float64
 }
 
 func GetConverter(category string) UnitConverter {

@@ -1,9 +1,5 @@
 package converter
 
-type ConversionStrategy interface {
-	Convert(value float64) float64
-}
-
 type CelsiusToFahrenheit struct{}
 
 func (c *CelsiusToFahrenheit) Convert(value float64) float64 {
