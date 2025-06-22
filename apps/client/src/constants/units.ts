@@ -13,7 +13,7 @@ export const measurementUnits = {
   temperature: ["Celsius", "Fahrenheit", "Kelvin"],
 };
 
-type MeasurementCategory = keyof typeof measurementUnits;
+export type MeasurementCategory = keyof typeof measurementUnits;
 
 export const measurementCategories: MeasurementCategory[] = Object.keys(
   measurementUnits
