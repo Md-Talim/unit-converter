@@ -1,13 +1,8 @@
 package converter
 
 import (
-	"math"
 	"testing"
 )
-
-func floatEquals(a, b float64) bool {
-	return math.Abs(a-b) < 1e-6
-}
 
 func TestTemperatureConverter(t *testing.T) {
 	converter := &TemperatureConverter{}
